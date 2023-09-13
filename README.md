@@ -15,18 +15,14 @@
 
 # Dependencies
 
-**TODO: adapt this section**
-
 - `bash`, `curl`, `tar`: generic POSIX utilities.
-- `SOME_ENV_VAR`: set this environment variable in your shell config to load the correct version of tool x.
+- [Ninja](https://ninja-build.org/): for build clang.
 
 # Install
 
 Plugin:
 
 ```shell
-asdf plugin add clang
-# or
 asdf plugin add clang https://github.com/higebu/asdf-clang.git
 ```
 
