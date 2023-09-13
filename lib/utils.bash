@@ -58,6 +58,7 @@ install_version() {
 		cd "$ASDF_DOWNLOAD_PATH"
 		cmake -S llvm -B build -G Ninja \
 			-DLLVM_ENABLE_PROJECTS='clang;clang-tools-extra;lldb;lld' \
+			-DLLVM_USE_LINKER=$(which lld) \
 			-DCMAKE_INSTALL_PREFIX="$install_path" \
 			-DCMAKE_BUILD_TYPE=Release
 		ninja -C build install
