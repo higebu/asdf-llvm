@@ -40,14 +40,15 @@ download_release() {
 
 	url="$GH_REPO/archive/llvmorg-${version}.tar.gz"
 
-	echo "* Downloading LLVM release $version $TOOL_NAME..."
+	echo "* Downloading LLVM release $version for $TOOL_NAME..."
 	curl "${curl_opts[@]}" -o "$filename" -C - "$url" || fail "Could not download $url"
 }
 
 install_version() {
 	local install_type="$1"
 	local version="$2"
-	local install_path="${3%/bin}/bin"
+	local install_path="${3%/bin}"
+	local bin_path="${3%/bin}/bin"
 
 	if [ "$install_type" != "version" ]; then
 		fail "asdf-llvm supports release installs only"
@@ -55,7 +56,7 @@ install_version() {
 
 	# Build from source
 	(
-		mkdir -p "$install_path"
+		mkdir -p "$bin_path"
 		cd "$ASDF_DOWNLOAD_PATH"
 		cmake -S llvm -B build -G Ninja \
 			-DLLVM_ENABLE_PROJECTS='clang;clang-tools-extra' \
@@ -65,17 +66,20 @@ install_version() {
 			-DCMAKE_BUILD_TYPE=Release
 		ninja -C build $TOOL_NAME
 		strip build/bin/$TOOL_NAME
-		cp build/bin/$TOOL_NAME "$install_path"
+		cp build/bin/$TOOL_NAME "$bin_path"
+		if [ $TOOL_NAME = "clang" ]; then
+			cp -r build/lib "$install_path"
+		fi
 		cd ..
 		rm -rf "$ASDF_DOWNLOAD_PATH"
 
 		local tool_cmd
 		tool_cmd="$(echo "$TOOL_TEST" | cut -d' ' -f1)"
-		test -x "$install_path/$tool_cmd" || fail "Expected $install_path/$tool_cmd to be executable."
+		test -x "$bin_path/$tool_cmd" || fail "Expected $bin_path/$tool_cmd to be executable."
 
 		echo "$TOOL_NAME $version installation was successful!"
 	) || (
-		rm -rf "$install_path"
+		rm -rf "$bin_path"
 		rm -rf "$ASDF_DOWNLOAD_PATH"
 		fail "An error occurred while installing $TOOL_NAME $version."
 	)
