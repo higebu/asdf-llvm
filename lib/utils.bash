@@ -3,11 +3,12 @@
 set -euo pipefail
 
 GH_REPO="https://github.com/llvm/llvm-project"
-TOOL_NAME="clang"
-TOOL_TEST="clang --version"
+__dirname="$(cd -P "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+TOOL_NAME="$(basename "$(dirname "${__dirname}")")"
+TOOL_TEST="$TOOL_NAME --version"
 
 fail() {
-	echo -e "asdf-$TOOL_NAME: $*"
+	echo -e "asdf-llvm: $*"
 	exit 1
 }
 
@@ -39,7 +40,7 @@ download_release() {
 
 	url="$GH_REPO/archive/llvmorg-${version}.tar.gz"
 
-	echo "* Downloading $TOOL_NAME release $version..."
+	echo "* Downloading LLVM release $version $TOOL_NAME..."
 	curl "${curl_opts[@]}" -o "$filename" -C - "$url" || fail "Could not download $url"
 }
 
@@ -49,7 +50,7 @@ install_version() {
 	local install_path="${3%/bin}/bin"
 
 	if [ "$install_type" != "version" ]; then
-		fail "asdf-$TOOL_NAME supports release installs only"
+		fail "asdf-llvm supports release installs only"
 	fi
 
 	# Build from source
@@ -57,11 +58,16 @@ install_version() {
 		mkdir -p "$install_path"
 		cd "$ASDF_DOWNLOAD_PATH"
 		cmake -S llvm -B build -G Ninja \
-			-DLLVM_ENABLE_PROJECTS='clang;clang-tools-extra;lldb;lld' \
-			-DLLVM_USE_LINKER=$(which lld) \
-			-DCMAKE_INSTALL_PREFIX="$install_path" \
+			-DLLVM_ENABLE_PROJECTS='clang;clang-tools-extra' \
+			-DLLVM_BUILD_RUNTIME="OFF" \
+			-DBUILD_SHARED_LIBS="OFF" \
+			-DCMAKE_INSTALL_PREFIX="/usr/local" \
 			-DCMAKE_BUILD_TYPE=Release
-		ninja -C build install
+		ninja -C build $TOOL_NAME
+		strip build/bin/$TOOL_NAME
+		cp build/bin/$TOOL_NAME "$install_path"
+		cd ..
+		rm -rf "$ASDF_DOWNLOAD_PATH"
 
 		local tool_cmd
 		tool_cmd="$(echo "$TOOL_TEST" | cut -d' ' -f1)"
@@ -70,6 +76,7 @@ install_version() {
 		echo "$TOOL_NAME $version installation was successful!"
 	) || (
 		rm -rf "$install_path"
+		rm -rf "$ASDF_DOWNLOAD_PATH"
 		fail "An error occurred while installing $TOOL_NAME $version."
 	)
 }

@@ -1,8 +1,8 @@
 <div align="center">
 
-# asdf-clang [![Build](https://github.com/higebu/asdf-clang/actions/workflows/build.yml/badge.svg)](https://github.com/higebu/asdf-clang/actions/workflows/build.yml) [![Lint](https://github.com/higebu/asdf-clang/actions/workflows/lint.yml/badge.svg)](https://github.com/higebu/asdf-clang/actions/workflows/lint.yml)
+# asdf-llvm [![Build](https://github.com/higebu/asdf-llvm/actions/workflows/build.yml/badge.svg)](https://github.com/higebu/asdf-llvm/actions/workflows/build.yml) [![Lint](https://github.com/higebu/asdf-llvm/actions/workflows/lint.yml/badge.svg)](https://github.com/higebu/asdf-llvm/actions/workflows/lint.yml)
 
-[clang](https://github.com/higebu/asdf-clang) plugin for the [asdf version manager](https://asdf-vm.com).
+[llvm](https://llvm.org/) plugin for the [asdf version manager](https://asdf-vm.com).
 
 </div>
 
@@ -23,23 +23,11 @@
 Plugin:
 
 ```shell
-asdf plugin add clang https://github.com/higebu/asdf-clang.git
-```
-
-clang:
-
-```shell
-# Show all installable versions
-asdf list-all clang
-
-# Install specific version
-asdf install clang latest
-
-# Set a version globally (on your ~/.tool-versions file)
-asdf global clang latest
-
-# Now clang commands are available
-clang --version
+asdf plugin add clang https://github.com/higebu/asdf-llvm.git
+asdf plugin add clang-format https://github.com/higebu/asdf-llvm.git
+asdf plugin add clangd https://github.com/higebu/asdf-llvm.git
+asdf plugin add llvm-objcopy https://github.com/higebu/asdf-llvm.git
+asdf plugin add llvm-objdump https://github.com/higebu/asdf-llvm.git
 ```
 
 Check [asdf](https://github.com/asdf-vm/asdf) readme for more instructions on how to
@@ -49,7 +37,7 @@ install & manage versions.
 
 Contributions of any kind welcome! See the [contributing guide](contributing.md).
 
-[Thanks goes to these contributors](https://github.com/higebu/asdf-clang/graphs/contributors)!
+[Thanks goes to these contributors](https://github.com/higebu/asdf-llvm/graphs/contributors)!
 
 # License
 

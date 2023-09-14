@@ -13,6 +13,9 @@ jobs:
       matrix:
         os:
           - ubuntu-latest
+        plugin:
+          - clang
+          - clang-format
     runs-on: ${{ matrix.os }}
     steps:
       - name: install ninja
@@ -21,4 +24,5 @@ jobs:
       - name: asdf_plugin_test
         uses: asdf-vm/actions/plugin-test@v2
         with:
-          command: clang --version
+          plugin: ${{ matrix.plugin }}
+          command: ${{ matrix.plugin }} --version
