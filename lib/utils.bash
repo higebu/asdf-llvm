@@ -67,7 +67,12 @@ install_version() {
 		ninja -C build $TOOL_NAME
 		strip build/bin/$TOOL_NAME
 		cp build/bin/$TOOL_NAME "$bin_path"
-		if [ $TOOL_NAME = "clang" ]; then
+		if [ "$TOOL_NAME" = "clang" ]; then
+			# Create symlinks to clang++ and other tools produced by clang
+			ln -sf "$TOOL_NAME" "$bin_path/clang++"
+			ln -sf "$TOOL_NAME" "$bin_path/clang-cl"
+			ln -sf "$TOOL_NAME" "$bin_path/clang-cpp"
+
 			cp -r build/lib "$install_path"
 		fi
 		cd ..
@@ -76,6 +81,11 @@ install_version() {
 		local tool_cmd
 		tool_cmd="$(echo "$TOOL_TEST" | cut -d' ' -f1)"
 		test -x "$bin_path/$tool_cmd" || fail "Expected $bin_path/$tool_cmd to be executable."
+		if [ "$TOOL_NAME" = "clang" ]; then
+			test -x "$bin_path/clang++" || fail "Expected $bin_path/clang++ to be executable."
+			test -x "$bin_path/clang-cl" || fail "Expected $bin_path/clang-cl to be executable."
+			test -x "$bin_path/clang-cpp" || fail "Expected $bin_path/clang-cpp to be executable."
+		fi
 
 		echo "$TOOL_NAME $version installation was successful!"
 	) || (
