@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.0.1](https://github.com/higebu/asdf-llvm/compare/v1.0.0...v1.0.1) (2025-05-19)
+
+
+### Bug Fixes
+
+* **deps:** bump amannn/action-semantic-pull-request from 5.4.0 to 5.5.3 ([b7b8dd3](https://github.com/higebu/asdf-llvm/commit/b7b8dd389c790237145e7436f1cd85b49611e37e))
+* **deps:** bump amannn/action-semantic-pull-request from 5.4.0 to 5.5.3 ([537cd5c](https://github.com/higebu/asdf-llvm/commit/537cd5c6a748a737639e1725ce74d8b4f61c8f37))
+
 ## 1.0.0 (2025-04-17)
 
 
